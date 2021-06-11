@@ -3,61 +3,65 @@
 namespace App\Http\Controllers;
 
 use App\Models\JobApply;
-use App\Models\JobPosting;
+use App\Repository\JobApplyRepository;
+use App\Repository\JobPostingRepository;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Storage;
 
 class JobApplyController extends Controller
 {
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
+     * @var JobApplyRepository
      */
+    private $jobApplyRepository;
+    /**
+     * @var JobPostingRepository
+     */
+    private $jobPostingRepository;
+
+    public function __construct(
+        JobApplyRepository $jobApplyRepository,
+        JobPostingRepository $jobPostingRepository
+    ) {
+        $this->jobApplyRepository = $jobApplyRepository;
+        $this->jobPostingRepository = $jobPostingRepository;
+    }
+
     public function index()
     {
         //
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @param  String  $slug
-     * @return \Illuminate\Http\Response
-     */
-    public function create(String $slug)
+    public function create($slug)
     {
-        $validator = Validator::make(compact('slug'),[
-            'slug' => [
-                'required',
-                Rule::exists('job_postings')->where(function ($query) use ($slug) {
-                    return $query->where('slug', $slug)->where('valid_through','>=',now());
-                }),
-            ],
-        ],[
-            'slug.exists' => 'Que pena, está vaga já não está mais disponível.',
+        return view('jobapply.create', [
+            'jobposting' => $this->jobPostingRepository->findBySlug($slug)
         ]);
-
-        if ($validator->fails()) {
-            return redirect(route('jobposting.index'))
-                ->withErrors($validator);
-        }
-
-        $jobposting = JobPosting::where('slug','=',$slug)->where('valid_through','>=',now())->first();
-        return view('jobapply.create',compact('jobposting'));
 
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
-        //
+        $curriculum = Storage::disk('local')->put(
+            auth()->user()->name,
+            $request->file('curriculum')
+        );
+
+        $jobApply = $this->jobApplyRepository->findApplyUserBySlug($request->slug);
+
+        if (is_null($jobApply)) {
+            $jobApply = $this->jobApplyRepository->apply($request, $curriculum);
+        } else {
+            $jobApply->delete();
+
+            $jobApply = $this->jobApplyRepository->apply($request, $curriculum);
+        }
+
+        Mail::to(config('mail.from.address'))
+            ->send(new \App\Mail\JobApply($jobApply));
+
+        return redirect()->route('jobposting.index');
     }
 
     /**

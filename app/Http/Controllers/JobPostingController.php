@@ -3,20 +3,28 @@
 namespace App\Http\Controllers;
 
 use App\Models\JobPosting;
+use App\Repository\JobPostingRepository;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use phpDocumentor\Reflection\Types\String_;
 
 class JobPostingController extends Controller
 {
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
+     * @var JobPostingRepository
      */
+    private $jobPostingRepository;
+
+    public function __construct(JobPostingRepository $jobPostingRepository)
+    {
+        $this->jobPostingRepository = $jobPostingRepository;
+    }
+
     public function index()
     {
-        $allJobPosting = JobPosting::where('valid_through','>=',now())->get();
-        return view('home',compact('allJobPosting'));
+        return view('home', [
+            'allJobPosting' => $this->jobPostingRepository->all()
+        ]);
     }
 
     /**
@@ -40,17 +48,11 @@ class JobPostingController extends Controller
         //
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  String  $slug
-     * @return \Illuminate\Http\Response
-     */
-    public function show(string $slug)
+    public function show($slug)
     {
-        $jobposting = JobPosting::where('slug','=',$slug)->where('valid_through','>=',now())->first();
-
-        return view('jobposting.show',compact('jobposting'));
+        return view('jobposting.show', [
+            'jobposting' => $this->jobPostingRepository->findBySlug($slug)
+        ]);
     }
 
     /**

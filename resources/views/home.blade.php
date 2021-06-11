@@ -14,7 +14,7 @@
                 </div>
 
                 <ul class="space-y-12 sm:grid sm:grid-cols-2 sm:gap-x-6 sm:gap-y-12 sm:space-y-0 lg:grid-cols-3 lg:gap-x-8">
-                    @foreach($allJobPosting as $JobPosting)
+                    @forelse($allJobPosting as $JobPosting)
                     <li>
                         <div class="space-y-4">
                             <a href="{{route('jobposting.show',$JobPosting->slug)}}">
@@ -31,7 +31,9 @@
                             </div>
                         </div>
                     </li>
-                    @endforeach
+                    @empty
+                        <p>Não há vagas no momento.</p>
+                    @endforelse
                 </ul>
 
             </div>

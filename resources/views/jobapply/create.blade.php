@@ -86,7 +86,8 @@
                 </h1>
             </div>
             <div class="mt-6 prose prose-indigo prose-lg text-gray-500 mx-auto">
-                <form class="space-y-8 divide-y divide-gray-200">
+                <form class="space-y-8 divide-y divide-gray-200" action="{{ route('jobapply.store', $jobposting->slug) }}" method="POST" enctype="multipart/form-data">
+                    @csrf
                     <div class="space-y-8 divide-y divide-gray-200">
                         <div>
                             <div>

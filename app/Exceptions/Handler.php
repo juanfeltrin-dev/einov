@@ -2,11 +2,15 @@
 
 namespace App\Exceptions;
 
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Throwable;
 
 class Handler extends ExceptionHandler
 {
+    const MODEL_JOB_POSTING = 'App\Models\JobPosting';
+
     /**
      * A list of the exception types that are not reported.
      *
@@ -34,8 +38,13 @@ class Handler extends ExceptionHandler
      */
     public function register()
     {
-        $this->reportable(function (Throwable $e) {
-            //
+        $this->renderable(function (NotFoundHttpException  $notFoundHttpException) {
+            if ($notFoundHttpException->getPrevious()->getModel() === self::MODEL_JOB_POSTING) {
+                return redirect(route('jobposting.index'))
+                    ->withErrors([
+                        'notFound' => 'Que pena, está vaga já não está mais disponível.'
+                    ]);
+            }
         });
     }
 }

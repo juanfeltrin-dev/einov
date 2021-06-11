@@ -37,6 +37,11 @@ Route::get(
     [\App\Http\Controllers\JobApplyController::class, 'create']
 )->middleware(['auth'])->name('jobapply.create');
 
+Route::post(
+    '/vagas/{slug}/candidatar',
+    [\App\Http\Controllers\JobApplyController::class, 'store']
+)->middleware(['auth'])->name('jobapply.store');
+
 
 Route::get('/dashboard', function () {
     return view('dashboard');
