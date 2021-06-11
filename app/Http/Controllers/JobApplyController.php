@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreJobApply;
 use App\Models\JobApply;
 use App\Repository\JobApplyRepository;
 use App\Repository\JobPostingRepository;
@@ -41,7 +42,7 @@ class JobApplyController extends Controller
 
     }
 
-    public function store(Request $request)
+    public function store(StoreJobApply $request)
     {
         $curriculum = Storage::disk('local')->put(
             auth()->user()->name,
@@ -61,7 +62,9 @@ class JobApplyController extends Controller
         Mail::to(config('mail.from.address'))
             ->send(new \App\Mail\JobApply($jobApply));
 
-        return redirect()->route('jobposting.index');
+        return redirect()->route('jobposting.index')->with([
+            'success' => 'Obrigado! Em breve entraremos em contato com você!'
+        ]);
     }
 
     /**

@@ -6,6 +6,7 @@
     </x-slot>
     <div class="bg-white">
         <x-validation-errors class="mb-4" :errors="$errors" />
+        <x-message-success class="mb-4" :message="session('success')" />
         <div class="mx-auto px-4 max-w-7xl sm:px-6 lg:px-8">
             <div class="space-y-12">
                 <div class="space-y-5 sm:space-y-4 md:max-w-xl lg:max-w-3xl xl:max-w-none">

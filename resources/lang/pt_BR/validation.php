@@ -181,6 +181,15 @@ return [
         'year'      => 'ano',
         'description' => 'descrição',
         'password_confirmation' => 'confirmação da senha',
+        'curriculum' => 'currículo',
+        'salary_claim' => 'pretenção salarial',
+        'challenge_date' => 'data para receber o desafio'
+    ],
+
+    'values' => [
+        'challenge_date' => [
+            'today' => 'hoje'
+        ]
     ],
 
 ];

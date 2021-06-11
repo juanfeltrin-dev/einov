@@ -109,6 +109,13 @@
                                     <div class="mt-1">
                                         <input id="curriculum" name="curriculum" type="file"  class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md">
                                     </div>
+                                    @error('curriculum')
+                                    <div class="flex">
+                                        <div class="mt-2 text-sm text-red-700">
+                                            {{ $message }}
+                                        </div>
+                                    </div>
+                                    @enderror
                                 </div>
 
 
@@ -117,16 +124,30 @@
                                         Pretenção Salarial
                                     </label>
                                     <div class="mt-1">
-                                        <input type="number" name="salary_claim" id="salary_claim" autocomplete="salary_claim" class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md">
+                                        <input type="text" name="salary_claim" id="salary_claim" autocomplete="off" class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md">
                                     </div>
+                                    @error('salary_claim')
+                                    <div class="flex">
+                                        <div class="mt-2 text-sm text-red-700">
+                                            {{ $message }}
+                                        </div>
+                                    </div>
+                                    @enderror
                                 </div>
                                 <div class="sm:col-span-3">
                                     <label for="street_address" class="block text-sm font-medium text-gray-700">
                                         Data para receber o desafio
                                     </label>
                                     <div class="mt-1">
-                                        <input type="date" name="challenge_date" id="challenge_date" autocomplete="challenge_date" class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md">
+                                        <input type="date" name="challenge_date" id="challenge_date" autocomplete="off" class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md">
                                     </div>
+                                    @error('challenge_date')
+                                    <div class="flex">
+                                        <div class="mt-2 text-sm text-red-700">
+                                            {{ $message }}
+                                        </div>
+                                    </div>
+                                    @enderror
                                 </div>
                             </div>
                         </div>
